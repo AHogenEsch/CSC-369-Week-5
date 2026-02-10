@@ -89,7 +89,7 @@ def plot_community_actual_color(placements_df, community_id, community_size,
 
     # Create figure with origin at bottom-left
     fig, ax = plt.subplots(1, 1, figsize=(10, 10))
-    ax.imshow(img, interpolation="nearest", origin="lower")
+    ax.imshow(img, interpolation="nearest")
     ax.set_title(
         f"Community #{community_id}  —  {community_size:,} members, "
         f"{total_pixels:,} pixels",
@@ -104,66 +104,66 @@ def plot_community_actual_color(placements_df, community_id, community_size,
     return out_path
 
 
-def plot_community_heatmap(placements_df, community_id, community_size,
-                           total_pixels, output_dir):
-    """Generate a heatmap of placement density for a community.
+# def plot_community_heatmap(placements_df, community_id, community_size,
+#                            total_pixels, output_dir):
+#     """Generate a heatmap of placement density for a community.
 
-    Brighter areas indicate more placements on the same coordinate.
-    Renders the full 2000×2000 canvas. Origin (0,0) is at the bottom-left.
+#     Brighter areas indicate more placements on the same coordinate.
+#     Renders the full 2000×2000 canvas. Origin (0,0) is at the bottom-left.
 
-    Parameters
-    ----------
-    placements_df : pl.DataFrame
-        Columns: x, y — all placements by this community's members.
-    community_id : int
-        Community identifier for the title / filename.
-    community_size : int
-        Number of members in the community.
-    total_pixels : int
-        Total pixel placements by this community.
-    output_dir : str or Path
-        Directory to save the output PNG.
+#     Parameters
+#     ----------
+#     placements_df : pl.DataFrame
+#         Columns: x, y — all placements by this community's members.
+#     community_id : int
+#         Community identifier for the title / filename.
+#     community_size : int
+#         Number of members in the community.
+#     total_pixels : int
+#         Total pixel placements by this community.
+#     output_dir : str or Path
+#         Directory to save the output PNG.
 
-    Returns
-    -------
-    Path to the saved image.
-    """
-    xs = placements_df["x"].to_numpy()
-    ys = placements_df["y"].to_numpy()
+#     Returns
+#     -------
+#     Path to the saved image.
+#     """
+#     xs = placements_df["x"].to_numpy()
+#     ys = placements_df["y"].to_numpy()
 
-    # Build full-canvas density grid
-    density = np.zeros((RPLACE_HEIGHT, RPLACE_WIDTH), dtype=np.int32)
-    np.add.at(density, (ys, xs), 1)
+#     # Build full-canvas density grid
+#     density = np.zeros((RPLACE_HEIGHT, RPLACE_WIDTH), dtype=np.int32)
+#     np.add.at(density, (ys, xs), 1)
 
-    # Create figure with origin at bottom-left
-    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+#     # Create figure with origin at bottom-left
+#     fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 
-    # Log scale for better visibility (many pixels have 1 placement,
-    # a few hotspots have hundreds)
-    norm = mcolors.LogNorm(vmin=1, vmax=max(density.max(), 2))
-    # Mask zeros so background stays white
-    masked = np.ma.masked_where(density == 0, density)
+#     # Log scale for better visibility (many pixels have 1 placement,
+#     # a few hotspots have hundreds)
+#     norm = mcolors.LogNorm(vmin=1, vmax=max(density.max(), 2))
+#     # Mask zeros so background stays white
+#     masked = np.ma.masked_where(density == 0, density)
 
-    cmap = plt.cm.inferno.copy()
-    cmap.set_bad(color="white")
+#     cmap = plt.cm.inferno.copy()
+#     cmap.set_bad(color="white")
 
-    im = ax.imshow(masked, cmap=cmap, norm=norm, interpolation="nearest",
-                   origin="lower")
-    cbar = fig.colorbar(im, ax=ax, shrink=0.7, pad=0.02)
-    cbar.set_label("Placements per pixel (log scale)", fontsize=9)
+#     im = ax.imshow(masked, cmap=cmap, norm=norm, interpolation="nearest",
+#                    origin="lower")
+#     cbar = fig.colorbar(im, ax=ax, shrink=0.7, pad=0.02)
+#     cbar.set_label("Placements per pixel (log scale)", fontsize=9)
 
-    ax.set_title(
-        f"Community #{community_id} — Heatmap  —  {community_size:,} members, "
-        f"{total_pixels:,} pixels",
-        fontsize=11, fontweight="bold"
-    )
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
+#     ax.set_title(
+#         f"Community #{community_id} — Heatmap  —  {community_size:,} members, "
+#         f"{total_pixels:,} pixels",
+#         fontsize=11, fontweight="bold"
+#     )
+#     ax.set_xlabel("x")
+#     ax.set_ylabel("y")
 
-    out_path = Path(output_dir) / f"community_{community_id}_heatmap.png"
-    fig.savefig(out_path, dpi=DPI, bbox_inches="tight", facecolor="white")
-    plt.close(fig)
-    return out_path
+#     out_path = Path(output_dir) / f"community_{community_id}_heatmap.png"
+#     fig.savefig(out_path, dpi=DPI, bbox_inches="tight", facecolor="white")
+#     plt.close(fig)
+#     return out_path
 
 
 def generate_botnet_plots(data_path, community_df, community_scores,
@@ -253,9 +253,9 @@ def generate_botnet_plots(data_path, community_df, community_scores,
         color_path = plot_community_actual_color(
             comm_placements, comm_id, size, total_px, out
         )
-        heat_path = plot_community_heatmap(
-            comm_placements, comm_id, size, total_px, out
-        )
+        # heat_path = plot_community_heatmap(
+        #     comm_placements, comm_id, size, total_px, out
+        # )
         print(f"saved.")
 
     elapsed = time.perf_counter() - start
@@ -328,7 +328,7 @@ def plot_all_botnets(data_path, community_df, community_scores,
             img[y, x] = rgb
 
     fig, ax = plt.subplots(1, 1, figsize=(12, 12))
-    ax.imshow(img, interpolation="nearest", origin="lower")
+    ax.imshow(img, interpolation="nearest")
     ax.set_title(
         f"All Botnet Activity  —  {n_botnets} communities, "
         f"{total_botnet_members:,} members, {total_botnet_pixels:,} pixels",
@@ -350,8 +350,7 @@ def plot_all_botnets(data_path, community_df, community_scores,
     cmap = plt.cm.inferno.copy()
     cmap.set_bad(color="white")
 
-    im = ax.imshow(masked, cmap=cmap, norm=norm, interpolation="nearest",
-                   origin="lower")
+    im = ax.imshow(masked, cmap=cmap, norm=norm, interpolation="nearest")
     cbar = fig.colorbar(im, ax=ax, shrink=0.7, pad=0.02)
     cbar.set_label("Placements per pixel (log scale)", fontsize=9)
     ax.set_title(
@@ -425,7 +424,7 @@ def plot_final_canvas(data_path='processed_place_data.parquet',
     # Render with matplotlib (origin at bottom-left)
     print("  > Rendering image...")
     fig, ax = plt.subplots(1, 1, figsize=(12, 12))
-    ax.imshow(img, interpolation="nearest", origin="lower")
+    ax.imshow(img, interpolation="nearest")
     ax.set_title("r/place 2022 — Final Canvas State", fontsize=13, fontweight="bold")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
