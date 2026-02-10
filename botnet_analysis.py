@@ -37,7 +37,7 @@ HIGH_VOLUME_PERCENTILE = 0.97        # Top 3% by placement count
 # CONFIGURATION - PHASE 3: Graph Construction
 # ============================================================
 TILE_SIZE = 50                       # Pixels per tile side (50x50)
-WINDOW_SECONDS = 300                 # 10-minute temporal bins
+WINDOW_SECONDS = 300                 # 5-minute temporal bins
 MIN_CO_OCCURRENCE = 3                # Minimum shared bins for an edge
 
 # ============================================================
@@ -61,15 +61,15 @@ BOTNET_UNIFORMITY_STD_THRESHOLD = 10.0   # Low std of member std_intervals
 # CONFIGURATION - PHASE 6: Final Classification
 # ============================================================
 SCORE_WEIGHTS = {
-    "flag_cooldown": 2.0,
-    "flag_low_interval_std": 1.0,
+    "flag_cooldown": 3.0,
+    "flag_low_interval_std": 3.0,
     "flag_24h_active": 2.0,
     "flag_small_area": 1.0,
     "flag_single_color": 0.5,
     "flag_printer": 2.0,
     "flag_high_volume": 0.5,
 }
-SCORE_BOTNET_COMMUNITY = 3.0
+SCORE_BOTNET_COMMUNITY = 2.0
 SCORE_LARGE_BOTNET_COMMUNITY = 4.0
 LARGE_COMMUNITY_SIZE = 20
 HIGH_CONFIDENCE_SCORE = 5.0
